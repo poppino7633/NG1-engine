@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <NG1/engine.hpp>
 #include <iostream>
 
@@ -8,8 +9,14 @@ void processInput(Window &window) {
 
 int main() {
 
-  setup();
+  #ifdef DEBUG
+  std::cerr << "Setup in debug mode" << std::endl;
+  #endif
   Window win("Test", 1280, 720, false);
+  setup();
+
+  VAO2D vao;
+
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
     processInput(win);

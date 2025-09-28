@@ -10,6 +10,7 @@ project(
 )
 
 add_subdirectory(extern/glfw)
+add_subdirectory(extern/glm)
 
 add_subdirectory(src)
 add_subdirectory(apps)

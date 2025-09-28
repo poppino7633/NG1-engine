@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <NG1/window.hpp>
 
 void Window::framebuffer_size_callback(GLFWwindow *window, int width,
@@ -51,11 +52,15 @@ Window::Window(const char *title, unsigned int width, unsigned int height,
 
   glfwSetFramebufferSizeCallback(this->ptr, Window::framebuffer_size_callback);
 
+  #ifdef DEBUG
   std::cerr << "Created window at " << this->ptr << std::endl;
+  #endif
 }
 
 Window::~Window() {
+  #ifdef DEBUG
   std::cerr << "Destroyed window at " << this->ptr << std::endl;
+  #endif
   glfwDestroyWindow(this->ptr);
 }
 
