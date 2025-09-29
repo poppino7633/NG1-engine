@@ -1,15 +1,12 @@
 #include <NG1/buffer.hpp>
+#include <NG1/vertex.hpp>
 #include <glad/glad.h>
 
-template<typename T>
-Buffer<T>::Buffer(std::vector<T> &data){
-  
+
+unsigned int _createBuffer(size_t size, void* data) {
+  unsigned int id; 
   glCreateBuffers(1, &id);
-  count = data.size();
 
-  glNamedBufferData(id, sizeof(T) * count, data.data(), GL_STATIC_DRAW);
-
-
+  glNamedBufferData(id, size, data, GL_STATIC_DRAW);
+  return id;
 }
-
-template class Buffer<unsigned int>;

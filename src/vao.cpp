@@ -1,5 +1,6 @@
-#include <NG1/vertex.hpp>
+#include <NG1/vao.hpp>
 #include <glad/glad.h>
+
 
 VAO2D::VAO2D() {
   glCreateVertexArrays(1, &id);
@@ -26,3 +27,4 @@ void VAO2D::bindEBO(Buffer<unsigned int> ebo){
 void VAO2D::bind() {
   glBindVertexArray(id);
 }
+

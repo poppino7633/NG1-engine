@@ -53,13 +53,13 @@ Window::Window(const char *title, unsigned int width, unsigned int height,
   glfwSetFramebufferSizeCallback(this->ptr, Window::framebuffer_size_callback);
 
   #ifdef DEBUG
-  std::cerr << "Created window at " << this->ptr << std::endl;
+  std::clog << "Created window at " << this->ptr << std::endl;
   #endif
 }
 
 Window::~Window() {
   #ifdef DEBUG
-  std::cerr << "Destroyed window at " << this->ptr << std::endl;
+  std::clog << "Destroyed window at " << this->ptr << std::endl;
   #endif
   glfwDestroyWindow(this->ptr);
 }
