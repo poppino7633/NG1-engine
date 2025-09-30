@@ -1,8 +1,5 @@
-#define MAIN
-#ifdef MAIN 
-#include <glad/glad.h>
-#endif
 #include <NG1/engine.hpp>
+#include <glad/glad.h>
 #include <iostream>
 
 void processInput(Window &window) {
