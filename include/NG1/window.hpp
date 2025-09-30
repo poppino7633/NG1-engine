@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <utility>
 #include <GLFW/glfw3.h>
 
 class Window {

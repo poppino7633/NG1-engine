@@ -1,3 +1,7 @@
+#define MAIN
+#ifdef MAIN 
+#include <glad/glad.h>
+#endif
 #include <NG1/engine.hpp>
 #include <iostream>
 

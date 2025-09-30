@@ -18,4 +18,3 @@ private:
   unsigned int id;
   size_t count;
 };
-
