@@ -10,11 +10,6 @@ void processInput(Window &window) {
     glfwSetWindowShouldClose(window.getPtr(), true);
 }
 
-struct Matrices {
-  glm::mat4 view;
-  glm::mat4 proj;
-} matrices;
-
 int main() {
 #ifdef DEBUG
   std::cerr << "Setup in debug mode" << std::endl;
@@ -27,25 +22,24 @@ int main() {
       FragmentShader(readFromFile("./shaders/fragment.glsl")));
 
   VAO3DInstanced vao;
+
   Quad q(vao);
   std::vector<Transform> quadTransforms(200);
-
   for (int i = 0; i < quadTransforms.size(); i++) {
-    quadTransforms[i].setPosition(
-        {2.0f * ((float)(i / 10) / 9.0f - 0.5f), 2.0f * ((float)(i % 10) / 9.0f - 0.5f),  -0.3f});
+    quadTransforms[i].setPosition({2.0f * ((float)(i / 10) / 9.0f - 0.5f),
+                                   2.0f * ((float)(i % 10) / 9.0f - 0.5f),
+                                   -0.3f});
     quadTransforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
-
   q.setTransforms(quadTransforms);
 
-  Transform cameraTransform({-1.0f, 0.0f, -3.0f}, {1.0f, 0.0f, 0.0f, 0.0f},
-                            {1.0f, 1.0f, 1.0f});
-
-  matrices.proj = glm::perspective(
+  CameraPerspective camera(
       glm::radians(60.0f),
-      (float)win.getSize().first / (float)win.getSize().second, 0.1f, 100.0f);
-
-  Buffer<Matrices> ubo(Matrices{});
+      (float)win.getSize().first / (float)win.getSize().second, 0.1f, 100.0f,
+      {{1.0f, 0.0f, -3.0f},
+       glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(160.0f),
+                   glm::vec3(0.0f, 1.0f, 0.0f)),
+       {1.0f, 1.0f, 1.0f}});
 
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
@@ -63,9 +57,7 @@ int main() {
           glm::angleAxis(glm::radians(90.0f) * (float)glfwGetTime(),
                          glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f))));
     }
-    matrices.view = cameraTransform.toMatrix();
-    ubo.updateFirst(matrices);
-    ubo.bindUniform(1);
+    camera.bind(1);
 
     q.updateTransforms(0, quadTransforms);
     q.draw();

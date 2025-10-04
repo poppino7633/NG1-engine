@@ -1,10 +1,7 @@
 #include <NG1/transform.hpp>
 
-Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) {
-  this->position = position;
-  this->rotation = rotation;
-  this->scale = scale;
-}
+Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
+    : position(position), rotation(rotation), scale(scale) {}
 
 glm::mat4 Transform::toMatrix() {
   glm::mat4 matrix = glm::mat4(1.0f);
@@ -14,3 +11,4 @@ glm::mat4 Transform::toMatrix() {
 
   return matrix;
 }
+
