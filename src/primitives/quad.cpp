@@ -11,8 +11,8 @@ Quad::Quad(VAO2D& vao) : vao(vao) {
 
   std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};
 
-  vbo = Buffer<Vertex2D>(vertices);
-  ebo = Buffer<unsigned int>(indices);
+  vbo.set(vertices);
+  ebo.set(indices);
 }
 
 void Quad::draw() {

@@ -1,11 +1,22 @@
 #include <NG1/engine.hpp>
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
 #include <iostream>
 
 void processInput(Window &window) {
   if (glfwGetKey(window.getPtr(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window.getPtr(), true);
 }
+
+struct Matrices {
+  glm::mat4 model;
+  glm::mat4 view;
+  glm::mat4 proj;
+} matrices;
+
+struct Colors {
+  glm::vec3 color;
+} colors;
 
 int main() {
 
@@ -22,6 +33,9 @@ int main() {
       VertexShader(readFromFile("./shaders/vertex.glsl")),
       FragmentShader(readFromFile("./shaders/fragment.glsl")));
 
+  Buffer<Colors> ubo(Colors{});
+  colors.color = {0.7f, 0.4f, 0.5f};
+
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
     processInput(win);
@@ -31,6 +45,8 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.use();
+    ubo.updateFirst(colors);
+    ubo.bindUniform(5);
 
     vao.bind();
     q.draw();
