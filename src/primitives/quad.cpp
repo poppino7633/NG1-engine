@@ -1,12 +1,12 @@
 #include <NG1/primitives/quad.hpp>
 #include <glad/glad.h>
 
-Quad::Quad(VAO2D& vao) : vao(vao) {
-  std::vector<Vertex2D> vertices = {
-      {{0.5f, 0.5f}, {1.0f, 1.0f}},
-      {{0.5f, -0.5f}, {1.0f, -1.0f}},
-      {{-0.5f, -0.5f}, {-1.0f, -1.0f}},
-      {{-0.5f, 0.5f}, {-1.0f, 1.0f}},
+Quad::Quad(VAO3D& vao) : vao(vao) {
+  std::vector<Vertex3D> vertices = {
+      {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+      {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f},  {1.0f, -1.0f}},
+      {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f},  {-1.0f, -1.0f}},
+      {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f},  {-1.0f, 1.0f}},
   };
 
   std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};

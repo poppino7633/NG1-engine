@@ -34,4 +34,32 @@ void VAO2D::bind() {
   vao.bind();
 }
 
+VAO3D::VAO3D() {
+  
+  glEnableVertexArrayAttrib(vao.getId(), 0);
+  glEnableVertexArrayAttrib(vao.getId(), 1);
+  glEnableVertexArrayAttrib(vao.getId(), 2);
 
+  glVertexArrayAttribFormat(vao.getId(), 0, 3, GL_FLOAT, GL_FALSE,
+                            offsetof(Vertex3D, position));
+  glVertexArrayAttribFormat(vao.getId(), 1, 3, GL_FLOAT, GL_FALSE,
+                            offsetof(Vertex3D, normal));
+  glVertexArrayAttribFormat(vao.getId(), 2, 2, GL_FLOAT, GL_FALSE,
+                            offsetof(Vertex3D, uv));
+
+  glVertexArrayAttribBinding(vao.getId(), 0, 0);
+  glVertexArrayAttribBinding(vao.getId(), 1, 0);
+  glVertexArrayAttribBinding(vao.getId(), 2, 0);
+}
+
+void VAO3D::bindVBO(Buffer<Vertex3D> vbo) {
+  glVertexArrayVertexBuffer(vao.getId(), 0, vbo.getId(), 0, sizeof(Vertex3D));
+}
+
+void VAO3D::bindEBO(Buffer<unsigned int> ebo){
+  glVertexArrayElementBuffer(vao.getId(), ebo.getId());
+}
+
+void VAO3D::bind() {
+  vao.bind();
+}

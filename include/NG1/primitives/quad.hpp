@@ -1,11 +1,13 @@
 #include <NG1/vao.hpp>
+#include <NG1/transform.hpp>
 
 class Quad {
 public:
-  Quad(VAO2D& vao); 
+  Quad(VAO3D& vao); 
   void draw();
+  Transform transform;
 private:
-  VAO2D& vao;
-  Buffer<Vertex2D> vbo;
+  VAO3D& vao;
+  Buffer<Vertex3D> vbo;
   Buffer<unsigned int> ebo;
 };

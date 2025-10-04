@@ -1,8 +1,11 @@
 #version 460 core
 out vec4 FragColor;  
-in vec3 ourColor;
   
+in VS_OUT {
+  vec2 texCoords;
+} fs_in;
+
 void main()
 {
-    FragColor = vec4(ourColor, 1.0);
+    FragColor = vec4((fs_in.texCoords + 1.0f) / 2, 0.0, 1.0);
 }

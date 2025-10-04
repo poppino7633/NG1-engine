@@ -18,4 +18,3 @@ struct VertexMaterial3D {
   glm::vec3 position;
   glm::vec2 uv;
 };
-

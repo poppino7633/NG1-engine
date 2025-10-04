@@ -20,3 +20,12 @@ private:
   VAO vao;
 };
 
+class VAO3D {
+public:
+  VAO3D();
+  void bindVBO(Buffer<Vertex3D> vbo);
+  void bindEBO(Buffer<unsigned int> ebo);
+  void bind();
+private:
+  VAO vao;
+};
