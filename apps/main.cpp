@@ -35,11 +35,12 @@ int main() {
 
   CameraPerspective camera(
       glm::radians(60.0f),
-      (float)win.getSize().first / (float)win.getSize().second, 0.1f, 100.0f,
+      win.getAspectRatio(), 0.1f, 100.0f,
       {{1.0f, 0.0f, -3.0f},
        glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(160.0f),
                    glm::vec3(0.0f, 1.0f, 0.0f)),
        {1.0f, 1.0f, 1.0f}});
+
 
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input

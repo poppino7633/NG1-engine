@@ -6,6 +6,7 @@ class Window {
 public:
   GLFWwindow* getPtr(); 
   std::pair<unsigned int, unsigned int> getSize();
+  float getAspectRatio() { return (float) width / (float) height; }
   bool isResizable();
   void setTitle(const char* title);
   void setSize(unsigned int width, unsigned int height);

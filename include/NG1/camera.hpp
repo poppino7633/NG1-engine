@@ -59,3 +59,35 @@ private:
   float farPlane;
   Camera camera;
 };
+
+class CameraOrthographic {
+public:
+  CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight, float nearPlane, float farPlane, Transform transform = {});
+  void bind(unsigned int index) { camera.bind(index); }
+  Transform getTransform() { return camera.getTransform(); }
+  void setTransform(Transform transform) { camera.setTransform(transform); }
+  void setBottomLeft(glm::vec2 bottomLeft) {
+    this->bottomLeft = bottomLeft;
+    updateProj();
+  }
+  void setTopRight(glm::vec2 topRight) {
+    this->topRight = topRight;
+    updateProj();
+  }
+  void setNearPlane(float nearPlane) {
+    this->nearPlane = nearPlane;
+    updateProj();
+  }
+  void setFarPlane(float farPlane) {
+    this->farPlane = farPlane;
+    updateProj();
+  }
+private:
+  void updateProj();
+
+  glm::vec2 bottomLeft;
+  glm::vec2 topRight;
+  float nearPlane;
+  float farPlane;
+  Camera camera;
+};
