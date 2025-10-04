@@ -1,10 +1,12 @@
 #version 460 core
-layout (location = 0) in vec3 aPos;   // the position variable has attribute position 0
-layout (location = 1) in vec3 aNormal; // the color variable has attribute position 1
+// Per vertex
+layout (location = 0) in vec3 aPos;   
+layout (location = 1) in vec3 aNormal; 
 layout (location = 2) in vec2 aTex;
+// Per instance
+layout (location = 3) in mat4 aModel;
 
 layout(std140, binding = 1) uniform Matrices {
-  mat4 model;
   mat4 view;
   mat4 proj;
 };
@@ -15,7 +17,7 @@ out VS_OUT {
 
 void main()
 {
-  gl_Position = proj * view * model * vec4(aPos, 1.0);
+  gl_Position = proj * view * aModel * vec4(aPos, 1.0);
   vs_out.texCoords = aTex;
 
 }       

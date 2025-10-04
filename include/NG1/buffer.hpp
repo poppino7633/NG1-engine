@@ -22,12 +22,15 @@ public:
   }
   void set(std::vector<T> &data) {
     _setDataStatic(id, data.size() * sizeof(T), data.data());
+    count = data.size();
   }
-  void update(size_t offsetCount, std::vector<T> &data) {
+  void update(unsigned int offsetCount, std::vector<T> &data) {
+    if(offsetCount + data.size() > count) throw;
     _updateBuffer(id, offsetCount * sizeof(T), data.size() * sizeof(T),
                   data.data());
   }
   void updateFirst(T data) {
+    if(!count) throw;
     _updateBuffer(id, 0, sizeof(T), &data);
   }
   void bindUniform(unsigned int index) { _bindUniformBuffer(id, index); }

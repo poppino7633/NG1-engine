@@ -11,13 +11,11 @@ void processInput(Window &window) {
 }
 
 struct Matrices {
-  glm::mat4 model;
   glm::mat4 view;
   glm::mat4 proj;
 } matrices;
 
 int main() {
-
 #ifdef DEBUG
   std::cerr << "Setup in debug mode" << std::endl;
 #endif
@@ -28,19 +26,24 @@ int main() {
       VertexShader(readFromFile("./shaders/vertex.glsl")),
       FragmentShader(readFromFile("./shaders/fragment.glsl")));
 
-  VAO3D vao;
+  VAO3DInstanced vao;
   Quad q(vao);
+  std::vector<Transform> quadTransforms(200);
 
-  q.transform.setPosition({0.0f, 0.0f, -3.0f});
+  for (int i = 0; i < quadTransforms.size(); i++) {
+    quadTransforms[i].setPosition(
+        {2.0f * ((float)(i / 10) / 9.0f - 0.5f), 2.0f * ((float)(i % 10) / 9.0f - 0.5f),  -0.3f});
+    quadTransforms[i].setScale({0.15f, 0.15f, 0.15f});
+  }
 
+  q.setTransforms(quadTransforms);
 
-  Transform cameraTransform({0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  Transform cameraTransform({-1.0f, 0.0f, -3.0f}, {1.0f, 0.0f, 0.0f, 0.0f},
+                            {1.0f, 1.0f, 1.0f});
 
-  matrices.proj =
-      glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-  std::cout << glm::to_string(q.transform.toMatrix() * glm::vec4({0.5f, 0.5f, 0.0f, 1.0f})) << std::endl;
-
-
+  matrices.proj = glm::perspective(
+      glm::radians(60.0f),
+      (float)win.getSize().first / (float)win.getSize().second, 0.1f, 100.0f);
 
   Buffer<Matrices> ubo(Matrices{});
 
@@ -55,13 +58,16 @@ int main() {
     shaderProgram.use();
     vao.bind();
 
-    q.transform.setRotation(glm::angleAxis(glm::radians(60.0f) * (float)glfwGetTime(), glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f))));
-    matrices.model = q.transform.toMatrix();
+    for (int i = 0; i < quadTransforms.size(); i++) {
+      quadTransforms[i].setRotation(
+          glm::angleAxis(glm::radians(90.0f) * (float)glfwGetTime(),
+                         glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f))));
+    }
     matrices.view = cameraTransform.toMatrix();
     ubo.updateFirst(matrices);
     ubo.bindUniform(1);
 
-
+    q.updateTransforms(0, quadTransforms);
     q.draw();
 
     // check and call events and swap the buffers

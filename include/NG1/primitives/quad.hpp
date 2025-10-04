@@ -3,11 +3,15 @@
 
 class Quad {
 public:
-  Quad(VAO3D& vao); 
+  Quad(VAO3DInstanced& vao); 
   void draw();
-  Transform transform;
+  const std::vector<Transform>& getTransforms() { return transforms; }
+  void setTransforms(std::vector<Transform>& transforms);
+  void updateTransforms(unsigned int offset, std::vector<Transform>& transforms);
 private:
-  VAO3D& vao;
+  std::vector<Transform> transforms;
+  VAO3DInstanced& vao;
   Buffer<Vertex3D> vbo;
+  Buffer<glm::mat4> matrices;
   Buffer<unsigned int> ebo;
 };

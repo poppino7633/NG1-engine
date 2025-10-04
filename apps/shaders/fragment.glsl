@@ -7,5 +7,5 @@ in VS_OUT {
 
 void main()
 {
-    FragColor = vec4((fs_in.texCoords + 1.0f) / 2, 0.0, 1.0);
+    FragColor = vec4((fs_in.texCoords + 1.0f) / 2, 1.0, 1.0);
 }
