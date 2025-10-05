@@ -2,11 +2,18 @@
 #include <glad/glad.h>
 #include <NG1/window.hpp>
 
-void Window::framebuffer_size_callback(GLFWwindow *window, int width,
+void Window::framebufferSizeCallback(GLFWwindow *window, int width,
                                        int height) {
   Window *parentWindow = (Window *)glfwGetWindowUserPointer(window);
   parentWindow->onResize(width, height);
   glViewport(0, 0, width, height);
+}
+
+
+void Window::mousePosCallback(GLFWwindow *window, double xpos,
+                                       double ypos) {
+  Window *parentWindow = (Window *)glfwGetWindowUserPointer(window);
+  parentWindow->onCursorPos(xpos, ypos);
 }
 
 void processInput(GLFWwindow *window) {
@@ -17,6 +24,11 @@ void processInput(GLFWwindow *window) {
 void Window::onResize(unsigned int width, unsigned int height) {
   this->width = width;
   this->height = height;
+}
+
+
+void Window::onCursorPos(double xpos, double ypos) {
+  this->cursorPos = {xpos, ypos};
 }
 
 Window::Window(const char *title, unsigned int width, unsigned int height,
@@ -51,7 +63,8 @@ Window::Window(const char *title, unsigned int width, unsigned int height,
   }
   glViewport(0, 0, width, height);
 
-  glfwSetFramebufferSizeCallback(this->ptr, Window::framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(this->ptr, Window::framebufferSizeCallback);
+  glfwSetCursorPosCallback(this->ptr, Window::mousePosCallback);
 
   #ifdef DEBUG
   std::clog << "Created window at " << this->ptr << std::endl;
@@ -86,4 +99,7 @@ std::pair<unsigned int, unsigned int> Window::getSize() {
   return {width, height};
 }
 
+glm::vec2 Window::getCursorPos() {
+  return cursorPos;
+}
 bool Window::isResizable() { return resizeable; }

@@ -5,6 +5,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <transform.hpp>
+#include <input.hpp>
 
 void processInput(Window &window) {
   if (glfwGetKey(window.getPtr(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -17,6 +18,7 @@ int main() {
 #endif
   Window win("Test", 1280, 720, false);
   setup();
+  InputManager input(win);
 
   ShaderProgram shaderProgram(
       VertexShader(readFromFile("./shaders/vertex.glsl")),
@@ -44,7 +46,7 @@ int main() {
 
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
-    processInput(win);
+    input.preUpdate();
 
     // rendering commands here
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -70,6 +72,7 @@ int main() {
 
 
     // check and call events and swap the buffers
+    input.postUpdate();
     glfwPollEvents();
     glfwSwapBuffers(win.getPtr());
   }
