@@ -1,4 +1,4 @@
-#include "transform.hpp"
+#include <transform.hpp>
 
 Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
     : position(position), rotation(rotation), scale(scale) {}
