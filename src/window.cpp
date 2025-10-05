@@ -67,6 +67,10 @@ Window::~Window() {
 
 GLFWwindow *Window::getPtr() { return this->ptr; }
 
+float Window::getAspectRatio() { 
+  return (float) width / (float) height; 
+}
+
 void Window::setTitle(const char *title) {
   glfwSetWindowTitle(this->ptr, title);
   this->title = title;

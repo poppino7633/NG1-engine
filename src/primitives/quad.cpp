@@ -15,6 +15,9 @@ Quad::Quad(VAO3DInstanced& vao) : vao(vao) {
   ebo.set(indices);
 }
 
+
+const std::vector<glm::mat4> Quad::getModelMatrices() { return modelMatrices; }
+
 void Quad::draw() {
   vao.bindVBO(vbo);
   vao.bindEBO(ebo);

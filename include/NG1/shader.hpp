@@ -7,7 +7,7 @@ std::string readFromFile(std::filesystem::path path);
 
 class VertexShader {
 public:
-  unsigned int getId() { return id; }
+  unsigned int getId();
   VertexShader(std::string code);
   ~VertexShader();
 private:
@@ -16,7 +16,7 @@ private:
 
 class FragmentShader {
 public:
-  unsigned int getId() { return id; }
+  unsigned int getId();
   FragmentShader(std::string code);
   ~FragmentShader();
 private:
@@ -25,7 +25,7 @@ private:
 
 class ShaderProgram {
 public:
-  unsigned int getId() { return id; }
+  unsigned int getId(); 
   ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader);
   ~ShaderProgram();
 

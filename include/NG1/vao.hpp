@@ -7,7 +7,7 @@ void _setupVAOInstancedMat4(unsigned int id, unsigned int attrib, unsigned int b
 class VAO {
 public:
   VAO();
-  unsigned int getId() { return id; }
+  unsigned int getId(); 
   void bind();
 private:
   unsigned int id;
@@ -19,6 +19,7 @@ public:
   void bindVBO(Buffer<Vertex2D> vbo);
   void bindEBO(Buffer<unsigned int> ebo);
   void bind();
+  unsigned int getId(); 
 private:
   VAO vao;
 };
@@ -29,19 +30,19 @@ public:
   void bindVBO(Buffer<Vertex3D> vbo);
   void bindEBO(Buffer<unsigned int> ebo);
   void bind();
-  unsigned int getId() { return vao.getId(); }
+  unsigned int getId(); 
 private:
   VAO vao;
 };
 
 class VAO3DInstanced {
 public:
-  VAO3DInstanced() : vao(VAO3D()) { _setupVAOInstancedMat4(vao.getId(), 3, 1); };
-  void bindVBO(Buffer<Vertex3D> vbo) { vao.bindVBO(vbo); }
-  void bindEBO(Buffer<unsigned int> ebo) { vao.bindEBO(ebo); }
+  VAO3DInstanced(); 
+  void bindVBO(Buffer<Vertex3D> vbo);
+  void bindEBO(Buffer<unsigned int> ebo);
   void bindInstancedMat4(Buffer<glm::mat4> buffer);
-  void bind() { vao.bind(); }
-  unsigned int getId() { return vao.getId(); }
+  void bind(); 
+  unsigned int getId(); 
 private:
   VAO3D vao;
 };

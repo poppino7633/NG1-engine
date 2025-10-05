@@ -54,6 +54,8 @@ VertexShader::~VertexShader() {
 #endif
 }
 
+unsigned int VertexShader::getId() { return id; }
+
 FragmentShader::FragmentShader(std::string code) {
   id = glCreateShader(GL_FRAGMENT_SHADER);
   const char *codePtr = code.c_str();
@@ -73,6 +75,8 @@ FragmentShader::FragmentShader(std::string code) {
   }
   std::clog << "Created fragment shader " << id << std::endl;
 }
+
+unsigned int FragmentShader::getId() { return id; }
 
 FragmentShader::~FragmentShader() {
   glDeleteShader(id);
@@ -104,6 +108,7 @@ ShaderProgram::ShaderProgram(VertexShader vertexShader,
   std::clog << "Created shader program " << id << std::endl;
 #endif
 }
+unsigned int ShaderProgram::getId() { return id; }
 
 ShaderProgram::~ShaderProgram() {
   glDeleteProgram(id);

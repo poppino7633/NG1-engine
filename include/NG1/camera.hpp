@@ -4,18 +4,11 @@
 
 class Camera {
 public:
-  void bind(unsigned int index) { ubo.bindUniform(index); }
-  glm::mat4 getViewMatrix() { return matrices.view; }
-  void setViewMatrix(glm::mat4 viewMatrix) {
-    matrices.view = viewMatrix;
-    updateUBO();
-  }
-  glm::mat4 getProjMatrix() { return matrices.proj; }
-  void setProjMatrix(glm::mat4 proj) {
-    matrices.proj = proj;
-    updateUBO();
-  }
-
+  void bind(unsigned int index);
+  glm::mat4 getViewMatrix();
+  void setViewMatrix(glm::mat4 viewMatrix);
+  glm::mat4 getProjMatrix(); 
+  void setProjMatrix(glm::mat4 proj); 
 private:
   void updateUBO();
   struct Matrices {
@@ -28,30 +21,13 @@ private:
 class CameraPerspective {
 public:
   CameraPerspective(float FOV, float ratio, float nearPlane, float farPlane);
-  void bind(unsigned int index) { camera.bind(index); }
-  glm::mat4 getViewMatrix() {
-    return camera.getViewMatrix();
-  }
-  void setViewMatrix(glm::mat4 viewMatrix) {
-    camera.setViewMatrix(viewMatrix);
-  }
-  void setFOV(float fov) {
-    this->fov = fov;
-    updateProj();
-  }
-  void setRatio(float ratio) {
-    this->ratio = ratio;
-    updateProj();
-  }
-  void setNearPlane(float nearPlane) {
-    this->nearPlane = nearPlane;
-    updateProj();
-  }
-  void setFarPlane(float farPlane) {
-    this->farPlane = farPlane;
-    updateProj();
-  }
-
+  void bind(unsigned int index); 
+  glm::mat4 getViewMatrix();
+  void setViewMatrix(glm::mat4 viewMatrix);  
+  void setFOV(float fov);
+  void setRatio(float ratio);
+  void setNearPlane(float nearPlane);
+  void setFarPlane(float farPlane); 
 private:
   void updateProj();
 
@@ -64,32 +40,14 @@ private:
 
 class CameraOrthographic {
 public:
-  CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight, float nearPlane,
-                     float farPlane);
-  void bind(unsigned int index) { camera.bind(index); }
-  glm::mat4 getViewMatrix() {
-    return camera.getViewMatrix();
-  }
-  void setViewMatrix(glm::mat4 viewMatrix) {
-    camera.setViewMatrix(viewMatrix);
-  }
-  void setBottomLeft(glm::vec2 bottomLeft) {
-    this->bottomLeft = bottomLeft;
-    updateProj();
-  }
-  void setTopRight(glm::vec2 topRight) {
-    this->topRight = topRight;
-    updateProj();
-  }
-  void setNearPlane(float nearPlane) {
-    this->nearPlane = nearPlane;
-    updateProj();
-  }
-  void setFarPlane(float farPlane) {
-    this->farPlane = farPlane;
-    updateProj();
-  }
-
+  CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight, float nearPlane, float farPlane);
+  void bind(unsigned int index);
+  glm::mat4 getViewMatrix();
+  void setViewMatrix(glm::mat4 viewMatrix);
+  void setBottomLeft(glm::vec2 bottomLeft);
+  void setTopRight(glm::vec2 topRight);
+  void setNearPlane(float nearPlane);
+  void setFarPlane(float farPlane); 
 private:
   void updateProj();
 

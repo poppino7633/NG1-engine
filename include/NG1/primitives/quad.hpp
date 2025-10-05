@@ -4,7 +4,7 @@ class Quad {
 public:
   Quad(VAO3DInstanced& vao); 
   void draw();
-  const std::vector<glm::mat4> getModelMatrices() { return modelMatrices; }
+  const std::vector<glm::mat4> getModelMatrices(); 
   void setModelMatrices(std::vector<glm::mat4>& matrices);
   void updateModelMatrices(unsigned int offset, std::vector<glm::mat4>& matrices);
 private:
