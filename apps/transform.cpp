@@ -1,4 +1,4 @@
-#include <NG1/transform.hpp>
+#include "transform.hpp"
 
 Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
     : position(position), rotation(rotation), scale(scale) {}
@@ -12,3 +12,11 @@ glm::mat4 Transform::toMatrix() {
   return matrix;
 }
 
+
+std::vector<glm::mat4> Transform::toMatrixArray(std::vector<Transform>& transforms) {
+  std::vector<glm::mat4> matrices(transforms.size());
+  for(int i = 0; i < matrices.size(); i++) {
+    matrices[i] = transforms[i].toMatrix();
+  }
+  return matrices;
+}

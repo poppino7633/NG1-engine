@@ -1,4 +1,7 @@
-add_executable(app main.cpp)
+
+file(GLOB SOURCE_LIST "./*.cpp" "./*.c")
+
+add_executable(app ${SOURCE_LIST} )
 
 target_link_libraries(app PRIVATE Engine)
 target_compile_definitions(app PUBLIC 

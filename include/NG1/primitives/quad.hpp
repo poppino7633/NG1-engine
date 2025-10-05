@@ -1,17 +1,16 @@
 #include <NG1/vao.hpp>
-#include <NG1/transform.hpp>
 
 class Quad {
 public:
   Quad(VAO3DInstanced& vao); 
   void draw();
-  const std::vector<Transform>& getTransforms() { return transforms; }
-  void setTransforms(std::vector<Transform>& transforms);
-  void updateTransforms(unsigned int offset, std::vector<Transform>& transforms);
+  const std::vector<glm::mat4> getModelMatrices() { return modelMatrices; }
+  void setModelMatrices(std::vector<glm::mat4>& matrices);
+  void updateModelMatrices(unsigned int offset, std::vector<glm::mat4>& matrices);
 private:
-  std::vector<Transform> transforms;
+  std::vector<glm::mat4> modelMatrices;
   VAO3DInstanced& vao;
   Buffer<Vertex3D> vbo;
-  Buffer<glm::mat4> matrices;
+  Buffer<glm::mat4> modelMatricesBuffer;
   Buffer<unsigned int> ebo;
 };

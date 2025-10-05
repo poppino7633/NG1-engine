@@ -4,6 +4,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
+#include "transform.hpp"
 
 void processInput(Window &window) {
   if (glfwGetKey(window.getPtr(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -25,21 +26,20 @@ int main() {
 
   Quad q(vao);
   std::vector<Transform> quadTransforms(200);
+  std::vector<glm::mat4> quadMatrices(quadTransforms.size());
   for (int i = 0; i < quadTransforms.size(); i++) {
     quadTransforms[i].setPosition({2.0f * ((float)(i / 10) / 9.0f - 0.5f),
                                    2.0f * ((float)(i % 10) / 9.0f - 0.5f),
                                    -0.3f});
     quadTransforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
-  q.setTransforms(quadTransforms);
+  quadMatrices = Transform::toMatrixArray(quadTransforms);
+  q.setModelMatrices(quadMatrices);
 
-  CameraPerspective camera(
-      glm::radians(60.0f),
-      win.getAspectRatio(), 0.1f, 100.0f,
-      {{1.0f, 0.0f, -3.0f},
-       glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(160.0f),
-                   glm::vec3(0.0f, 1.0f, 0.0f)),
-       {1.0f, 1.0f, 1.0f}});
+  
+  Transform cameraTransform = {{1.0f, 0.0f, -3.0f}, glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(160.0f), glm::vec3(0.0f, 1.0f, 0.0f)), {1.0f, 1.0f, 1.0f}};
+  CameraPerspective camera(glm::radians(90.0f), win.getAspectRatio(), 0.1f, 100.0f);
+  camera.setViewMatrix(cameraTransform.toMatrix());
 
 
   while (!glfwWindowShouldClose(win.getPtr())) {
@@ -53,15 +53,21 @@ int main() {
     shaderProgram.use();
     vao.bind();
 
+    camera.setViewMatrix(cameraTransform.toMatrix());
+    camera.bind(1);
+
     for (int i = 0; i < quadTransforms.size(); i++) {
       quadTransforms[i].setRotation(
           glm::angleAxis(glm::radians(90.0f) * (float)glfwGetTime(),
                          glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f))));
-    }
-    camera.bind(1);
 
-    q.updateTransforms(0, quadTransforms);
+    }
+
+    quadMatrices = Transform::toMatrixArray(quadTransforms);
+    q.updateModelMatrices(0, quadMatrices);
     q.draw();
+
+
 
     // check and call events and swap the buffers
     glfwPollEvents();

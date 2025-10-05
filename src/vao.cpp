@@ -1,6 +1,7 @@
 #include <NG1/vao.hpp>
 #include <glad/glad.h>
 
+
 void _setupVAOInstancedMat4(unsigned int id, unsigned int attrib,
                             unsigned int binding, unsigned int divisor) {
 

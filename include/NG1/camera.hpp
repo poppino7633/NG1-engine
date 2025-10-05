@@ -1,38 +1,40 @@
 #include <NG1/buffer.hpp>
-#include <NG1/transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Camera {
 public:
-  Camera(Transform transform);
   void bind(unsigned int index) { ubo.bindUniform(index); }
-  Transform getTransform() { return transform; }
-  void setTransform(Transform transform) {
-    this->transform = transform;
-    updateView();
+  glm::mat4 getViewMatrix() { return matrices.view; }
+  void setViewMatrix(glm::mat4 viewMatrix) {
+    matrices.view = viewMatrix;
+    updateUBO();
   }
-  void setProj(glm::mat4 proj) {
+  glm::mat4 getProjMatrix() { return matrices.proj; }
+  void setProjMatrix(glm::mat4 proj) {
     matrices.proj = proj;
     updateUBO();
   }
 
 private:
-  void updateView();
   void updateUBO();
-  Transform transform;
   struct Matrices {
     glm::mat4 view;
     glm::mat4 proj;
   } matrices;
-  Buffer<Matrices> ubo;
+  Buffer<Matrices> ubo = {Matrices{}};
 };
 
 class CameraPerspective {
 public:
-  CameraPerspective(float FOV, float ratio, float nearPlane, float farPlane,
-                    Transform transform = {});
+  CameraPerspective(float FOV, float ratio, float nearPlane, float farPlane);
   void bind(unsigned int index) { camera.bind(index); }
-  Transform getTransform() { return camera.getTransform(); }
-  void setTransform(Transform transform) { camera.setTransform(transform); }
+  glm::mat4 getViewMatrix() {
+    return camera.getViewMatrix();
+  }
+  void setViewMatrix(glm::mat4 viewMatrix) {
+    camera.setViewMatrix(viewMatrix);
+  }
   void setFOV(float fov) {
     this->fov = fov;
     updateProj();
@@ -62,10 +64,15 @@ private:
 
 class CameraOrthographic {
 public:
-  CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight, float nearPlane, float farPlane, Transform transform = {});
+  CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight, float nearPlane,
+                     float farPlane);
   void bind(unsigned int index) { camera.bind(index); }
-  Transform getTransform() { return camera.getTransform(); }
-  void setTransform(Transform transform) { camera.setTransform(transform); }
+  glm::mat4 getViewMatrix() {
+    return camera.getViewMatrix();
+  }
+  void setViewMatrix(glm::mat4 viewMatrix) {
+    camera.setViewMatrix(viewMatrix);
+  }
   void setBottomLeft(glm::vec2 bottomLeft) {
     this->bottomLeft = bottomLeft;
     updateProj();
@@ -82,6 +89,7 @@ public:
     this->farPlane = farPlane;
     updateProj();
   }
+
 private:
   void updateProj();
 

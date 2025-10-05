@@ -1,4 +1,3 @@
-#pragma once
 #include <glm/gtc/quaternion.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -16,6 +15,7 @@ public:
   void setRotation(glm::quat rotation) { this->rotation = rotation; }
   void setScale(glm::vec3 scale) { this->scale = scale; }
 
+  static std::vector<glm::mat4> toMatrixArray(std::vector<Transform>& transforms);
 private:
   glm::vec3 position;
   glm::quat rotation = {1.0f, 0.0f, 0.0f, 0.0f};
