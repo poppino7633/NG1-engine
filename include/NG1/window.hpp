@@ -12,6 +12,8 @@ public:
   bool isResizable();
   void setTitle(const char *title);
   void setSize(unsigned int width, unsigned int height);
+  void lockCursor();
+  void unlockCursor();
   glm::vec2 getCursorPos();
   Window(const char *title, unsigned int width, unsigned int height,
          bool resizeable = 0);

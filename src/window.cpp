@@ -95,6 +95,15 @@ void Window::setSize(unsigned int width, unsigned int height) {
   this->width = width;
   this->height = height;
 }
+
+void Window::lockCursor() {
+  glfwSetInputMode(ptr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+void Window::unlockCursor(){
+
+  glfwSetInputMode(ptr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
 std::pair<unsigned int, unsigned int> Window::getSize() {
   return {width, height};
 }
