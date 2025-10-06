@@ -16,11 +16,6 @@ void Window::mousePosCallback(GLFWwindow *window, double xpos,
   parentWindow->onCursorPos(xpos, ypos);
 }
 
-void processInput(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-}
-
 void Window::onResize(unsigned int width, unsigned int height) {
   this->width = width;
   this->height = height;

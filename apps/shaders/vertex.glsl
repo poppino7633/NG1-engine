@@ -6,6 +6,9 @@ layout (location = 2) in vec2 aTex;
 // Per instance
 layout (location = 3) in mat4 aModel;
 
+layout(std140, binding = 0) uniform baseMatrix {
+  mat4 baseModel;
+};
 layout(std140, binding = 1) uniform Matrices {
   mat4 view;
   mat4 proj;
@@ -17,8 +20,8 @@ out VS_OUT {
 
 void main()
 {
-  gl_Position = proj * view * aModel * vec4(aPos, 1.0);
+  mat4 model = aModel * baseModel;
+  gl_Position = proj * view * model * vec4(aPos, 1.0);
   vs_out.texCoords = aTex;
-
 }       
 

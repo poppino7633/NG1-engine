@@ -4,7 +4,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
-#include <transform.hpp>
+#include <primitives/quad.hpp>
 #include <input.hpp>
 
 void processInput(Window &window) {
@@ -25,7 +25,7 @@ glm::vec3 moveKeyboard(InputManager& input, Transform transform) {
 }
 
 glm::quat rotateByMouse(InputManager& input) {
-  const float sensitivity = 0.02f;
+  const float sensitivity = 0.005f;
   glm::vec2 delta = input.getMouseDelta() * sensitivity;
 
   static float pitch = 0.0f;
@@ -67,21 +67,18 @@ int main() {
 
   Quad q(vao);
   std::vector<Transform> quadTransforms(200);
-  std::vector<glm::mat4> quadMatrices(quadTransforms.size());
   for (int i = 0; i < quadTransforms.size(); i++) {
     quadTransforms[i].setPosition({2.0f * ((float)(i / 10) / 9.0f - 0.5f),
                                    2.0f * ((float)(i % 10) / 9.0f - 0.5f),
-                                   -0.3f});
+                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f});
     quadTransforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
-  quadMatrices = Transform::toMatrixArray(quadTransforms);
-  q.setModelMatrices(quadMatrices);
+  q.setTransforms(quadTransforms);
 
   
   Transform cameraTransform = {{0.0f, 0.0f, 3.0f}, glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)), {1.0f, 1.0f, 1.0f}};
   CameraPerspective camera(glm::radians(90.0f), win.getAspectRatio(), 0.1f, 100.0f);
   camera.setViewMatrix(cameraTransform.toMatrix());
-
 
   win.lockCursor();
   while (!glfwWindowShouldClose(win.getPtr())) {
@@ -91,8 +88,9 @@ int main() {
     lastTime = glfwGetTime();
 
     // rendering commands here
+    glEnable(GL_DEPTH_TEST);  
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderProgram.use();
     vao.bind();
@@ -104,13 +102,12 @@ int main() {
 
     for (int i = 0; i < quadTransforms.size(); i++) {
       quadTransforms[i].setRotation(
-          glm::angleAxis(glm::radians(90.0f) * (float)glfwGetTime(),
-                         glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f))));
+          glm::angleAxis(glm::radians(90.0f) * (0.5f + i%2 + i%3 + i%5) * (float)glfwGetTime(),
+                         glm::normalize(glm::vec3(1.0f * (i%2 - 0.5), 1.0f * (i%3 - 1), 0.0f))));
 
     }
 
-    quadMatrices = Transform::toMatrixArray(quadTransforms);
-    q.updateModelMatrices(0, quadMatrices);
+    q.updateTransforms(0, quadTransforms);
     q.draw();
 
 

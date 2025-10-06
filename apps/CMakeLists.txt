@@ -1,5 +1,5 @@
 
-file(GLOB SOURCE_LIST "./*.cpp" "./*.c")
+file(GLOB SOURCE_LIST "./*.cpp" "./primitives/*.cpp" "./*.c")
 
 add_executable(app ${SOURCE_LIST} )
 
