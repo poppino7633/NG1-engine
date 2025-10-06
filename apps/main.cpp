@@ -78,7 +78,7 @@ int main() {
   q.setModelMatrices(quadMatrices);
 
   
-  Transform cameraTransform = {{1.0f, 0.0f, -3.0f}, glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(160.0f), glm::vec3(0.0f, 1.0f, 0.0f)), {1.0f, 1.0f, 1.0f}};
+  Transform cameraTransform = {{0.0f, 0.0f, 3.0f}, glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)), {1.0f, 1.0f, 1.0f}};
   CameraPerspective camera(glm::radians(90.0f), win.getAspectRatio(), 0.1f, 100.0f);
   camera.setViewMatrix(cameraTransform.toMatrix());
 
