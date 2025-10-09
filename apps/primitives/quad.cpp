@@ -18,3 +18,5 @@ void Quad::addCommands(MeshManager& meshManager) {
   std::vector<glm::mat4> modelMatrices = Transform::toMatrixArray(transforms);
   meshManager.addDrawCommand(mesh, modelMatrices);
 }
+
+Mesh Quad::getMesh() { return mesh; }

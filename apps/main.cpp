@@ -68,20 +68,20 @@ int main() {
   MeshManagerBuilder staticMeshesBuilder;
 
   Quad q(staticMeshesBuilder);
-  q.transforms.resize(100);
+  q.transforms.resize(1000);
   for (unsigned int i = 0; i < q.transforms.size(); i++) {
     q.transforms[i].setPosition({0.3f * ((float)(i % 100 - i % 10) / 9.0f - 0.5f),
                                    3.0f * ((float)(i % 10) / 9.0f - 0.5f),
-                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 1000) * 0.4f});
+                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 100) * 0.4f});
     q.transforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
 
   Quad q2(staticMeshesBuilder);
-  q2.transforms.resize(100);
+  q2.transforms.resize(1000);
   for (unsigned int i = 0; i < q2.transforms.size(); i++) {
     q2.transforms[i].setPosition({0.3f * ((float)(i % 100 - i % 10) / 9.0f - 0.5f),
-                                   3.0f * ((float)(i % 10) / 9.0f - 0.5f),
-                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 1000) * 0.4f - 2.0f});
+                                   3.0f * ((float)(i % 10) / 9.0f - 0.5f + 2.0f),
+                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 100) * 0.4f});
     q2.transforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
 
@@ -96,6 +96,10 @@ int main() {
   glfwSwapInterval(0);
 
 
+  q.addCommands(staticMeshes);
+  q2.addCommands(staticMeshes);
+
+  staticMeshes.generateBuffers();
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
     input.preUpdate();
@@ -126,12 +130,16 @@ int main() {
                          glm::normalize(glm::vec3(1.0f * (i%2 - 0.5), 1.0f * (i%3 - 1), 0.0f))));
 
     }
-    q.addCommands(staticMeshes);
-    q2.addCommands(staticMeshes);
-    staticMeshes.generateIndirectBuffer();
+    std::vector<glm::mat4> qMatrices = Transform::toMatrixArray(q.transforms);
+    staticMeshes.updateInstancedBuffer(q.getMesh().getBaseInstance(), qMatrices);
+    std::vector<glm::mat4> q2Matrices = Transform::toMatrixArray(q2.transforms);
+    staticMeshes.updateInstancedBuffer(q2.getMesh().getBaseInstance(), q2Matrices);
+    //std::clog << q.getMesh().getBaseInstance() << " " << q2.getMesh().getBaseInstance() << std::endl;
+    /*q.addCommands(staticMeshes)*/;
+    /*q2.addCommands(staticMeshes)*/;
     //std::clog << staticMeshes.getIndirectBuffer().getCount() << std::endl;
     staticMeshes.multiDraw(vao, state);
-    staticMeshes.reset();
+    //staticMeshes.reset();
 
     //q.updateTransforms(0, quadTransforms);
 

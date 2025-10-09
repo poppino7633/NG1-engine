@@ -17,18 +17,22 @@ public:
   unsigned int getIndexCount();
   unsigned int getFirstIndex();
   int getBaseVertex();
+  unsigned int getBaseInstance();
+  void setBaseInstance(unsigned int baseInstance);
 private:
   unsigned int indexCount;
   unsigned int firstIndex;
   int baseVertex;
+  unsigned int baseInstance;
 };
 
 class MeshManager {
 public:
   MeshManager(std::vector<Vertex3D>& vertices, std::vector<unsigned int>& indices, unsigned int mode);
-  void addDrawCommand(Mesh mesh, std::vector<glm::mat4>& instances);
-  void generateIndirectBuffer(unsigned int mode = 2);
+  void addDrawCommand(Mesh& mesh, std::vector<glm::mat4>& instances);
+  void generateBuffers(unsigned int mode = 2);
   void multiDraw(VAO3DInstanced& vao, State& state);
+  void updateInstancedBuffer(unsigned int offset, std::vector<glm::mat4>& instances);
   void reset();
 
   Buffer<DrawElementsIndirectCommand>& getIndirectBuffer();

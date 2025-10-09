@@ -28,17 +28,17 @@ MeshManager::MeshManager(std::vector<Vertex3D> &vertices,
   }
 }
 
-void MeshManager::addDrawCommand(Mesh mesh, std::vector<glm::mat4> &instances) {
+void MeshManager::addDrawCommand(Mesh& mesh, std::vector<glm::mat4> &instances) {
   DrawElementsIndirectCommand command = {
       mesh.getIndexCount(), (unsigned int)instances.size(),
       mesh.getFirstIndex(), mesh.getBaseVertex(), baseInstance};
+  mesh.setBaseInstance(baseInstance);
   totalInstances.insert(totalInstances.end(), instances.begin(),
                         instances.end());
   baseInstance += instances.size();
   drawCommands.push_back(command);
-
 }
-void MeshManager::generateIndirectBuffer(unsigned int mode) {
+void MeshManager::generateBuffers(unsigned int mode) {
   switch (mode) {
   case 0:
     indirect.setStatic(drawCommands);
@@ -52,7 +52,7 @@ void MeshManager::generateIndirectBuffer(unsigned int mode) {
   default:
     throw;
   }
-  instancedBuffer.setStream(totalInstances);
+  instancedBuffer.setDynamic(totalInstances);
 }
 void MeshManager::multiDraw(VAO3DInstanced &vao, State &state) {
   vao.bind(state);
@@ -71,6 +71,12 @@ void MeshManager::reset() {
   instancedBuffer.clear();
   drawCommands.clear();
 }
+void MeshManager::updateInstancedBuffer(unsigned int offset, std::vector<glm::mat4>& instances) {
+  for(unsigned int i = 0; i < instances.size(); i++) {
+    totalInstances[offset+i] = instances[i];
+  }
+  instancedBuffer.update(offset, instances);
+}
 Buffer<DrawElementsIndirectCommand> &MeshManager::getIndirectBuffer() {
   return indirect;
 }
@@ -88,3 +94,10 @@ Mesh MeshManagerBuilder::addMesh(std::vector<Vertex3D> &vertices,
 MeshManager MeshManagerBuilder::generate(unsigned int mode) {
   return MeshManager(totalVertices, totalIndices, mode);
 }
+unsigned int Mesh::getBaseInstance() {
+  return baseInstance;
+}
+void Mesh::setBaseInstance(unsigned int baseInstance) {
+  this->baseInstance = baseInstance;
+}
+
