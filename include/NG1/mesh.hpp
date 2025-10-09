@@ -1,19 +1,57 @@
 #include <NG1/vao.hpp>
 
+typedef struct {
+  unsigned int count;
+  unsigned int instanceCount;
+  unsigned int firstIndex;
+  int baseVertex;
+  unsigned int baseInstance;
+} DrawElementsIndirectCommand;
+
+
+                            
+
 class Mesh {
 public:
-  Mesh();
-  Mesh(VAO3DInstanced& vao, std::vector<Vertex3D>& vertices, std::vector<unsigned int>& indices, glm::mat4 baseModelMatrix = glm::mat4(1.0f));
-  void setBaseModelMatrix(glm::mat4 baseModelMatrix);
-  void setModelMatrices(std::vector<glm::mat4>& modelMatrices);
-  void updateModelMatrices(unsigned int offset, std::vector<glm::mat4>& modelMatrices);
-  void draw();
+  Mesh(unsigned int indexCount, unsigned int firstIndex, int baseVertex);
+  unsigned int getIndexCount();
+  unsigned int getFirstIndex();
+  int getBaseVertex();
 private:
-  unsigned int count = 0;
-  VAO3DInstanced& vao;
+  unsigned int indexCount;
+  unsigned int firstIndex;
+  int baseVertex;
+};
+
+class MeshManager {
+public:
+  MeshManager(std::vector<Vertex3D>& vertices, std::vector<unsigned int>& indices, unsigned int mode);
+  void addDrawCommand(Mesh mesh, std::vector<glm::mat4>& instances);
+  void generateIndirectBuffer(unsigned int mode = 2);
+  void multiDraw(VAO3DInstanced& vao, State& state);
+  void reset();
+
+  Buffer<DrawElementsIndirectCommand>& getIndirectBuffer();
+  
+private:
   Buffer<Vertex3D> vbo;
   Buffer<unsigned int> ebo;
-  Buffer<glm::mat4> baseModelMatrixBuffer{glm::mat4(1.0f)};
-  Buffer<glm::mat4> modelMatricesBuffer;
+  Buffer<glm::mat4> instancedBuffer;
+  Buffer<DrawElementsIndirectCommand> indirect;
 
+  std::vector<glm::mat4> totalInstances;
+  std::vector<DrawElementsIndirectCommand> drawCommands;
+
+  unsigned int baseInstance = 0;
+};
+
+class MeshManagerBuilder {
+public:
+  Mesh addMesh(std::vector<Vertex3D>& vertices, std::vector<unsigned int>& indices);
+  MeshManager generate(unsigned int mode = 0);
+private:
+  std::vector<Vertex3D> totalVertices;
+  std::vector<unsigned int> totalIndices;
+  int baseVertex = 0;
+  unsigned int firstIndex = 0;
 };

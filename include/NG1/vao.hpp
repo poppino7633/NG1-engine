@@ -1,3 +1,4 @@
+#include <NG1/state.hpp>
 #include <NG1/buffer.hpp>
 #include <NG1/vertex.hpp>
 #include <glm/mat4x4.hpp>
@@ -8,7 +9,7 @@ class VAO {
 public:
   VAO();
   unsigned int getId(); 
-  void bind();
+  void bind(State& state);
 private:
   unsigned int id;
 };
@@ -18,7 +19,7 @@ public:
   VAO2D();
   void bindVBO(Buffer<Vertex2D> vbo);
   void bindEBO(Buffer<unsigned int> ebo);
-  void bind();
+  void bind(State& state);
   unsigned int getId(); 
 private:
   VAO vao;
@@ -29,9 +30,11 @@ public:
   VAO3D();
   void bindVBO(Buffer<Vertex3D> vbo);
   void bindEBO(Buffer<unsigned int> ebo);
-  void bind();
+  void bind(State& state);
   unsigned int getId(); 
 private:
+  unsigned int currentVBO = 0;
+  unsigned int currentEBO = 0;
   VAO vao;
 };
 
@@ -41,8 +44,9 @@ public:
   void bindVBO(Buffer<Vertex3D> vbo);
   void bindEBO(Buffer<unsigned int> ebo);
   void bindInstancedMat4(Buffer<glm::mat4> buffer);
-  void bind(); 
+  void bind(State& state); 
   unsigned int getId(); 
 private:
+  unsigned int currentInstanced = 0;
   VAO3D vao;
 };

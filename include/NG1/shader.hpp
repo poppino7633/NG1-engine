@@ -1,3 +1,4 @@
+#include <NG1/state.hpp>
 #include <string>
 #include <filesystem>
 
@@ -29,7 +30,7 @@ public:
   ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader);
   ~ShaderProgram();
 
-  void use();
+  void use(State& state);
 private:
   unsigned int id;
 };

@@ -1,4 +1,3 @@
-#include <NG1/engine.hpp>
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
@@ -6,6 +5,7 @@
 #include <iostream>
 #include <primitives/quad.hpp>
 #include <input.hpp>
+#include <NG1/engine.hpp>
 
 void processInput(Window &window) {
   if (glfwGetKey(window.getPtr(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -58,22 +58,34 @@ int main() {
   Window win("Test", 1280, 720, false);
   setup();
   InputManager input(win);
+  State state;
 
   ShaderProgram shaderProgram(
       VertexShader(readFromFile("./shaders/vertex.glsl")),
       FragmentShader(readFromFile("./shaders/fragment.glsl")));
 
   VAO3DInstanced vao;
+  MeshManagerBuilder staticMeshesBuilder;
 
-  Quad q(vao);
-  std::vector<Transform> quadTransforms(200);
-  for (int i = 0; i < quadTransforms.size(); i++) {
-    quadTransforms[i].setPosition({2.0f * ((float)(i / 10) / 9.0f - 0.5f),
-                                   2.0f * ((float)(i % 10) / 9.0f - 0.5f),
-                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f});
-    quadTransforms[i].setScale({0.15f, 0.15f, 0.15f});
+  Quad q(staticMeshesBuilder);
+  q.transforms.resize(100);
+  for (unsigned int i = 0; i < q.transforms.size(); i++) {
+    q.transforms[i].setPosition({0.3f * ((float)(i % 100 - i % 10) / 9.0f - 0.5f),
+                                   3.0f * ((float)(i % 10) / 9.0f - 0.5f),
+                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 1000) * 0.4f});
+    q.transforms[i].setScale({0.15f, 0.15f, 0.15f});
   }
-  q.setTransforms(quadTransforms);
+
+  Quad q2(staticMeshesBuilder);
+  q2.transforms.resize(100);
+  for (unsigned int i = 0; i < q2.transforms.size(); i++) {
+    q2.transforms[i].setPosition({0.3f * ((float)(i % 100 - i % 10) / 9.0f - 0.5f),
+                                   3.0f * ((float)(i % 10) / 9.0f - 0.5f),
+                                   -0.3f + (i%2 + i % 3 + i % 5 - 0.5) * 0.05f - (float)(i / 1000) * 0.4f - 2.0f});
+    q2.transforms[i].setScale({0.15f, 0.15f, 0.15f});
+  }
+
+  MeshManager staticMeshes = staticMeshesBuilder.generate();
 
   
   Transform cameraTransform = {{0.0f, 0.0f, 3.0f}, glm::rotate({1.0f, 0.0f, 0.0f, 0.0f}, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)), {1.0f, 1.0f, 1.0f}};
@@ -81,6 +93,9 @@ int main() {
   camera.setViewMatrix(cameraTransform.toMatrix());
 
   win.lockCursor();
+  glfwSwapInterval(0);
+
+
   while (!glfwWindowShouldClose(win.getPtr())) {
     // input
     input.preUpdate();
@@ -92,24 +107,33 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderProgram.use();
-    vao.bind();
 
+    shaderProgram.use(state);
+    camera.bind(1, state);
     cameraTransform.setPosition(moveKeyboard(input, cameraTransform));
     cameraTransform.setRotation(rotateByMouse(input));
     camera.setViewMatrix(glm::inverse(cameraTransform.toMatrix()));
-    camera.bind(1);
 
-    for (int i = 0; i < quadTransforms.size(); i++) {
-      quadTransforms[i].setRotation(
+    for (unsigned int i = 0; i < q.transforms.size(); i++) {
+      q.transforms[i].setRotation(
           glm::angleAxis(glm::radians(90.0f) * (0.5f + i%2 + i%3 + i%5) * (float)glfwGetTime(),
                          glm::normalize(glm::vec3(1.0f * (i%2 - 0.5), 1.0f * (i%3 - 1), 0.0f))));
 
     }
+    for (unsigned int i = 0; i < q2.transforms.size(); i++) {
+      q2.transforms[i].setRotation(
+          glm::angleAxis(glm::radians(90.0f) * (0.5f + i%2 + i%3 + i%5) * (float)glfwGetTime(),
+                         glm::normalize(glm::vec3(1.0f * (i%2 - 0.5), 1.0f * (i%3 - 1), 0.0f))));
 
-    q.updateTransforms(0, quadTransforms);
-    q.draw();
+    }
+    q.addCommands(staticMeshes);
+    q2.addCommands(staticMeshes);
+    staticMeshes.generateIndirectBuffer();
+    //std::clog << staticMeshes.getIndirectBuffer().getCount() << std::endl;
+    staticMeshes.multiDraw(vao, state);
+    staticMeshes.reset();
 
+    //q.updateTransforms(0, quadTransforms);
 
 
     // check and call events and swap the buffers

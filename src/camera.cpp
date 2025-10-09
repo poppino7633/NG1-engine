@@ -1,6 +1,8 @@
 #include <NG1/camera.hpp>
 
-void Camera::bind(unsigned int index) { ubo.bindUniform(index); }
+void Camera::bind(unsigned int index, State& state) { 
+  state.bindCamera(ubo.getId(), index);
+}
 glm::mat4 Camera::getViewMatrix() { return matrices.view; }
 void Camera::setViewMatrix(glm::mat4 viewMatrix) {
   matrices.view = viewMatrix;
@@ -22,7 +24,9 @@ CameraPerspective::CameraPerspective(float FOV, float ratio, float nearPlane,
 }
 
 
-void CameraPerspective::bind(unsigned int index) { camera.bind(index); }
+void CameraPerspective::bind(unsigned int index, State& state) { 
+  camera.bind(index, state); 
+}
 glm::mat4 CameraPerspective::getViewMatrix() {
   return camera.getViewMatrix();
 }
@@ -58,7 +62,9 @@ CameraOrthographic::CameraOrthographic(glm::vec2 bottomLeft, glm::vec2 topRight,
 }
 
 
-void CameraOrthographic::bind(unsigned int index) { camera.bind(index); }
+void CameraOrthographic::bind(unsigned int index, State& state) { 
+  camera.bind(index, state); 
+}
 glm::mat4 CameraOrthographic::getViewMatrix() {
   return camera.getViewMatrix();
 }

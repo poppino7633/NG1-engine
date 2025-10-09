@@ -5,6 +5,13 @@
 void _setDataStatic(unsigned int id, size_t size, void* data) {
   glNamedBufferData(id, size, data, GL_STATIC_DRAW);
 }
+void _setDataDynamic(unsigned int id, size_t size, void* data){
+  glNamedBufferData(id, size, data, GL_DYNAMIC_DRAW);
+}
+void _setDataStream(unsigned int id, size_t size, void* data){
+  glNamedBufferData(id, size, data, GL_STREAM_DRAW);
+}
+
 
 unsigned int _createBuffer() {
   unsigned int id;
@@ -23,3 +30,4 @@ void _bindUniformBuffer(unsigned int id, unsigned int index) {
 void _bindStorageBuffer(unsigned int id, unsigned int index) {
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, id);
 }
+

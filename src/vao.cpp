@@ -17,7 +17,10 @@ void _setupVAOInstancedMat4(unsigned int id, unsigned int attrib,
 VAO::VAO() { glCreateVertexArrays(1, &id); }
 
 unsigned int VAO::getId() { return id; }
-void VAO::bind() { glBindVertexArray(id); }
+
+void VAO::bind(State& state) { 
+  state.bindVAO(id);
+}
 
 VAO2D::VAO2D() {
   glEnableVertexArrayAttrib(vao.getId(), 0);
@@ -40,7 +43,7 @@ void VAO2D::bindEBO(Buffer<unsigned int> ebo) {
   glVertexArrayElementBuffer(vao.getId(), ebo.getId());
 }
 
-void VAO2D::bind() { vao.bind(); }
+void VAO2D::bind(State& state) { vao.bind(state); }
 
 unsigned int VAO2D::getId() { return vao.getId(); }
 
@@ -63,14 +66,18 @@ VAO3D::VAO3D() : vao(VAO()) {
 }
 
 void VAO3D::bindVBO(Buffer<Vertex3D> vbo) {
+  if(vbo.getId() == currentVBO) return;
+  currentVBO = vbo.getId();
   glVertexArrayVertexBuffer(vao.getId(), 0, vbo.getId(), 0, sizeof(Vertex3D));
 }
 
 void VAO3D::bindEBO(Buffer<unsigned int> ebo) {
+  if(ebo.getId() == currentEBO) return;
+  currentEBO = ebo.getId();
   glVertexArrayElementBuffer(vao.getId(), ebo.getId());
 }
 
-void VAO3D::bind() { vao.bind(); }
+void VAO3D::bind(State& state) { vao.bind(state); }
 
 unsigned int VAO3D::getId() { return vao.getId(); }
 
@@ -83,10 +90,10 @@ void VAO3DInstanced::bindVBO(Buffer<Vertex3D> vbo) {
 void VAO3DInstanced::bindEBO(Buffer<unsigned int> ebo) { 
   vao.bindEBO(ebo); 
 }
-void VAO3DInstanced::bind() { 
-  vao.bind(); 
-}
+void VAO3DInstanced::bind(State& state) { vao.bind(state); }
 void VAO3DInstanced::bindInstancedMat4(Buffer<glm::mat4> buffer) {
+  if(currentInstanced == buffer.getId()) return;
+  currentInstanced = buffer.getId();
   glVertexArrayVertexBuffer(vao.getId(), 1, buffer.getId(), 0,
                             sizeof(glm::mat4));
 }

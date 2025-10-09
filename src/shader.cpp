@@ -116,7 +116,6 @@ ShaderProgram::~ShaderProgram() {
   std::clog << "Destroyed shader program " << id << std::endl;
 #endif
 }
-
-void ShaderProgram::use() {
-  glUseProgram(id); 
+void ShaderProgram::use(State& state) {
+  state.useShaderProgram(id);
 }
